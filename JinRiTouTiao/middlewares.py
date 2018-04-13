@@ -8,6 +8,8 @@
 from scrapy import signals
 from selenium import webdriver
 from scrapy.http import HtmlResponse
+from fake_useragent import UserAgent
+
 class JinritoutiaoSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
@@ -56,17 +58,14 @@ class JinritoutiaoSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-
-
 class JSPageMiddleware(object):
 
     def __init__(self):
         self.driver = webdriver.Chrome(executable_path="C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe")
         super(JSPageMiddleware, self).__init__()
+
     def process_request(self, request, spider):
         if spider.name == "TouTiao_GetParentUrl":
-
-
             self.driver.get(request.url)
             html = self.driver.page_source
             import time
@@ -74,3 +73,46 @@ class JSPageMiddleware(object):
             self.driver.close()
             print("访问{0}".format(request.url))
             return HtmlResponse(url=request.url, body=html, encoding="utf-8", request=request)
+
+
+class RandomUserAgentMiddlwareOne(object):
+    """
+    随机切换User-Agent
+    """
+    def __init__(self, crawler):
+        super(RandomUserAgentMiddlwareOne, self).__init__()
+        self.ua = UserAgent()
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
+    def process_request(self, request, spider):
+        request.headers.setdefault(b'User-Agent', self.ua.random)
+
+
+class RandomUserAgentMiddlwareTwo(object):
+    """
+    可配置的随机切换User-Agent, 并增加代理
+    """
+    def __init__(self, crawler):
+        super(RandomUserAgentMiddlwareTwo, self).__init__()
+        self.ua = UserAgent()
+        self.ua_type = crawler.settings.get("RANDOM_UA_TYPE", "random")
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
+    def process_request(self, request, spider):
+        """
+        get_ua采用闭包(函数中定义函数)
+        :param request:
+        :param spider:
+        :return:
+        """
+        def get_ua():
+            return getattr(self.ua, self.ua_type)
+
+        request.headers.setdefault(b'User-Agent', get_ua())
+        request.meta["proxy"] = ""

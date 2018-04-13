@@ -86,7 +86,7 @@ if __name__ == '__main__':
         "encoding": 'utf-8',
     }
 
-    keyword_list_boya = get_parent_url('博雅舆情')
+    keyword_list_boya = get_parent_url('小米')
     for data in keyword_list_boya:
         data['column1'] = COLUMN1
         get_child_url(data)

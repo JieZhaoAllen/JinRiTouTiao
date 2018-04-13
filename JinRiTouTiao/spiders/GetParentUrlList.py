@@ -13,10 +13,11 @@ class GetParentUrlSpider(RedisSpider):
     name = "TouTiao_GetParentUrl"
     # allowed_domains = ["www.toutiao.com"]
     # start_urls = []
-    def __init__(self):
-        self.driver = webdriver.Chrome(executable_path="C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe")
-        super(GetParentUrlSpider, self).__init__()
-        dispatcher.connect(self.spider_closed, signals.spider_closed)
+
+    # def __init__(self):
+    #     self.driver = webdriver.Chrome(executable_path="C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe")
+    #     super(GetParentUrlSpider, self).__init__()
+    #     dispatcher.connect(self.spider_closed, signals.spider_closed)
 
     def spider_closed(self, spider):
         print("spider closed")

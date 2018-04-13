@@ -54,7 +54,7 @@ ROBOTSTXT_OBEY = False
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    # 'JinRiTouTiao.middlewares.MyCustomDownloaderMiddleware': 543,
-   'JinRiTouTiao.middlewares.JSPageMiddleware': 543,
+   'JinRiTouTiao.middlewares.RandomUserAgentMiddlwareTwo': 543,
 }
 
 # Enable or disable extensions
@@ -104,3 +104,5 @@ MYSQL_HOST = "127.0.0.1"
 MYSQL_DBNAME = "weibo_info_eb"
 MYSQL_USER = "root"
 MYSQL_PASSWORD = "123456"
+
+RANDOM_UA_TYPE = "random"
