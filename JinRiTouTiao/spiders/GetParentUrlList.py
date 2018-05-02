@@ -9,16 +9,28 @@ from selenium import webdriver
 
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
+
+
 class GetParentUrlSpider(RedisSpider):
+
     name = "TouTiao_GetParentUrl"
     # allowed_domains = ["www.toutiao.com"]
     # start_urls = []
 
     # def __init__(self):
+    # 设置不加载图片
+    #     chrome_opt = webdriver.ChromeOptions()
+    #     prefs = {"profile.managed_default_content_sttings.images": 2}
+    #     chrome_opt.add_experimental_option("prefs", prefs)
+    #     driver = webdriver.Chrome(executable_path="chromedriver.exe", chrome_options=chrome_opt)
     #     self.driver = webdriver.Chrome(executable_path="C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe")
     #     super(GetParentUrlSpider, self).__init__()
     #     dispatcher.connect(self.spider_closed, signals.spider_closed)
 
+    #个性化设置setting中的配置
+    custom_settings = {
+        "COOKIES_ENABLED": True
+    }
     def spider_closed(self, spider):
         print("spider closed")
         self.driver.close()

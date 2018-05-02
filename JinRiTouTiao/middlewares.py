@@ -9,6 +9,9 @@ from scrapy import signals
 from selenium import webdriver
 from scrapy.http import HtmlResponse
 from fake_useragent import UserAgent
+from .tools.crawl_xici_ip import GetIP
+import redis
+
 
 class JinritoutiaoSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -115,4 +118,29 @@ class RandomUserAgentMiddlwareTwo(object):
             return getattr(self.ua, self.ua_type)
 
         request.headers.setdefault(b'User-Agent', get_ua())
-        request.meta["proxy"] = ""
+
+
+
+class RandomProxyMiddleware(object):
+    def process_request(self, request, spider):
+        get_ip = GetIP()
+        request.meta["proxy"] = get_ip.get_random_ip()
+
+
+# class ProxyMiddleware(object):
+#     redisclient = redis.Redis(REDIS_PROXY_HOST, REDIS_PROXY_PORT)
+#     DONT_RETRY_ERRORS = (TimeoutError, ConnectionRefusedError, ResponseNeverReceived, ConnectError, ValueError)
+#
+#     def process_request(self, request, spider):
+#         """
+#         将request设置为使用代理
+#         """
+#         try:
+#             self.redisclient = redis.Redis(REDIS_PROXY_HOST, REDIS_PROXY_PORT)
+#             proxy = self.redisclient.srandmember(REDIS_PROXY_KEY)
+#             proxyjson = json.loads(proxy)
+#             ip = proxyjson["proxy"]
+#             print ip
+#             request.meta['proxy'] = "https://%s" % ip
+#         except Exception, ee:
+#             print '------------------------------', ee
